@@ -18,5 +18,10 @@ variable "mysql_tags" {
     default = {
         Component = "mysql"
     }
+}
 
+variable "ansible_tags" {
+    default = {
+        Component = "ansible"
+    }
 }

@@ -143,3 +143,21 @@ resource "aws_security_group_rule" "frontend_ansible" {
   security_group_id = module.frontend_sg.id
 }
 
+#frontend allowing connection on 22 from the bastion server
+resource "aws_security_group_rule" "ansible_public" {
+  type              = "ingress"
+  from_port         = 22 #ssh connection port
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"] #all traffic
+  security_group_id = module.ansible_sg.id
+}
+
+resource "aws_security_group_rule" "bastion_public" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = module.bastion_sg.id
+}
