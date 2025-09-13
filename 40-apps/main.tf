@@ -6,6 +6,7 @@ module "mysql" {
   instance_type          = "t2.micro"
   vpc_security_group_ids = [local.mysql_sg_id]
   subnet_id              = local.database_subnet_id
+  create_security_group = false
 
   tags = merge(
     var.common_tags,
@@ -24,6 +25,7 @@ module "backend" {
   instance_type          = "t2.micro"
   vpc_security_group_ids = [local.backend_sg_id]
   subnet_id              = local.private_subnet_id
+  create_security_group = false
 
   tags = merge(
     var.common_tags,
@@ -42,6 +44,7 @@ module "frontend" {
   instance_type          = "t2.micro"
   vpc_security_group_ids = [local.frontend_sg_id]
   subnet_id              = local.public_subnet_id
+  create_security_group = false
 
   tags = merge(
     var.common_tags,
@@ -60,6 +63,7 @@ module "ansible" {
   instance_type          = "t2.micro"
   vpc_security_group_ids = [local.ansible_sg_id]
   subnet_id              = local.public_subnet_id
+  create_security_group = false
   user_data = file("expense.sh")
 
   tags = merge(
@@ -74,16 +78,16 @@ module "ansible" {
 module "records" {
   source  = "terraform-aws-modules/route53/aws//modules/records"
 
-  # zone_name = keys(module.zones.route53_zone_zone_id)[0]
-  # zone_name = var.zone_name
+  #zone_name = keys(module.zones.route53_zone_zone_id)[0]
+  zone_name = var.zone_name
   records = [
     {
       name    = "mysql"
       type    = "A"
       ttl     = 1
       records = [
-        "10.0.21.83" #private IP of mysql server
-        #module.mysql.private_ip
+        #"10.0.21.40" #private IP of mysql server
+        module.mysql.private_ip
       ]
     },
     {
@@ -91,7 +95,8 @@ module "records" {
       type    = "A"
       ttl     = 1
       records = [
-        "10.0.11.236" #private IP of backend
+        #"10.0.11.235" #private IP of backend
+        module.backend.private_ip
       ]
     },
     {
@@ -99,7 +104,8 @@ module "records" {
       type    = "A"
       ttl     = 1
       records = [
-        "10.0.1.51" #private IP of frontend
+        #"10.0.1.215" #private IP of frontend
+        module.frontend.private_ip
       ]
     },
     {
@@ -107,7 +113,8 @@ module "records" {
       type    = "A"
       ttl     = 1
       records = [
-        "98.81.109.71" #public IP of frontend
+        #"100.26.32.73" #public IP of frontend
+        module.frontend.public_ip
       ]
     }
   ]

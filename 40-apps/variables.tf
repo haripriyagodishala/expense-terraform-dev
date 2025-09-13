@@ -25,3 +25,7 @@ variable "ansible_tags" {
         Component = "ansible"
     }
 }
+
+variable "zone_name" {
+    default = "haridevops.space"
+}

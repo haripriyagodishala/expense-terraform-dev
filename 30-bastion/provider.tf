@@ -2,15 +2,15 @@ terraform {
   required_providers {
     aws = {
       source = "hashicorp/aws"
-      version = "5.80.0"
+      version = "~> 6.0"
     }
   }
-  backend "s3" {
-      bucket = "hari-81s-remote-state"
-      key    = "expense-bastion"
-      region = "us-east-1"
-      dynamodb_table = "Hari-81s-locking"
-  }
+  # backend "s3" {
+  #     bucket = "harii-81s-remote-state"
+  #     key    = "expense-bastion"
+  #     region = "us-east-1"
+  #     dynamodb_table = "harii-81s-locking"
+  # }
 
 }
 
